@@ -25,3 +25,12 @@
 [submodule "bundle/delimitMate"]
 	path = bundle/delimitMate
 	url = git@github.com:Raimondi/delimitMate.git
+[submodule "bundle/closetag"]
+	path = bundle/closetag
+	url = git@github.com:vim-scripts/closetag.vim.git
+[submodule "bundle/nerdtree-git"]
+	path = bundle/nerdtree-git
+	url = git@github.com:Xuyuanp/nerdtree-git-plugin.git
+[submodule "bundle/conque-shell"]
+	path = bundle/conque-shell
+	url = git@github.com:vim-scripts/Conque-Shell.git
