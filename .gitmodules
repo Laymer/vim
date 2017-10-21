@@ -46,3 +46,18 @@
 [submodule "bundle/vim-ragtag"]
 	path = bundle/vim-ragtag
 	url = git@github.com:tpope/vim-ragtag.git
+[submodule "bundle/nerdtree-git-plugin"]
+	path = bundle/nerdtree-git-plugin
+	url = git@github.com:Xuyuanp/nerdtree-git-plugin.git
+[submodule "vim-indent-guides"]
+	path = vim-indent-guides
+	url = git@github.com:nathanaelkane/vim-indent-guides
+[submodule "bundle/vim-indent-guides"]
+	path = bundle/vim-indent-guides
+	url = git@github.com:nathanaelkane/vim-indent-guides
+[submodule "bundle/indentLine"]
+	path = bundle/indentLine
+	url = git@github.com:Yggdroot/indentLine.git
+[submodule "bundle/easymotion"]
+	path = bundle/easymotion
+	url = git@github.com:easymotion/vim-easymotion.git
