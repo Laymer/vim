@@ -61,3 +61,6 @@
 [submodule "bundle/easymotion"]
 	path = bundle/easymotion
 	url = git@github.com:easymotion/vim-easymotion.git
+[submodule "bundle/neocomplete.vim"]
+	path = bundle/neocomplete.vim
+	url = git@github.com:Shougo/neocomplete.vim.git

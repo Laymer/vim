@@ -1,13 +1,20 @@
-" Startup
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" @jsonkenl Vimrc Configuration
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" Start Pathogen
 execute pathogen#infect()
-filetype plugin indent on
+
+" Style setup
+set nowrap
 syntax on
+filetype plugin indent on
 colorscheme badwolf 
 
 " Custom leader  
 let mapleader=" "
 
-" Ignore Specific File Types
+" Ignore specific file types
 set wildignore+=*.a,*.o
 set wildignore+=*.bmp,*.gif,*.ico,*.jpg,*.png
 set wildignore+=.DS_Store,.git,.hg,.svn
@@ -26,8 +33,7 @@ hi CursorColumn cterm=NONE ctermbg=235
 set hidden
 set history=100
 
-" Indenting Logic
-set nowrap
+" Tab setup 
 set tabstop=2
 set shiftwidth=2
 set expandtab
@@ -46,12 +52,38 @@ nnoremap <silent> <leader>h :nohlsearch<Bar>:echo<CR>
 nnoremap <Leader>b :e#<CR>
 
 " CSS Auto Complete
-autocmd FileType css set omnifunc=csscomplete#CompleteCss
+autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 
-""""""""""""""""""""""""""""""""""""""""""""""""
-" PLUG-INS 
-""""""""""""""""""""""""""""""""""""""""""""""""
+if !exists('g:neocomplete#sources#omni#input_patterns')
+  let g:neocomplete#sources#omni#input_patterns = {}
+endif
 
+"""""""""""""""""""""""""""""""""""""""""""""""""
+" PLUG-IN LIST 
+"""""""""""""""""""""""""""""""""""""""""""""""""
+
+"  ctrlp.vim
+"  delimitMate
+"  easymotion
+"  gitgutter
+"  indentLine
+"  lightline
+"  nerdcommenter
+"  nerdtree
+"  nerdtree-git-plugin
+"  supertab
+"  vim-csharp
+"  vim-elixir
+"  vim-javascript
+"  vim-multiple-cursors
+"  Shougo/neocomplete.vim
+
+" PLUG-IN SETTINGS
+""""""""""""""""""""""""""""""""""""""""""""""""
 " NERDTree
 " ----------------------------------------------
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
@@ -86,16 +118,44 @@ set noshowmode
 
 " Easymotion
 " ----------------------------------------------
-" <leader> = <leader><leader> by default
-
 " <leader>f{char} to move to {char}
-map <leader>f <Plug>(easymotion-bd-f)
-nmap <leader>f <Plug>(easymotion-overwin-f)
+map <leader><leader>f <Plug>(easymotion-bd-f)
+nmap <leader><leader>f <Plug>(easymotion-overwin-f)
 
 " Move to line
-map <leader>L <Plug>(easymotion-bd-jk)
-nmap <leader>L <Plug>(easymotion-overwin-line)
+map <leader><leader>L <Plug>(easymotion-bd-jk)
+nmap <leader><leader>L <Plug>(easymotion-overwin-line)
 
 " Move to word
-map <leader>w <Plug>(easymotion-bd-w)
-nmap <leader>w <Plug>(easymotion-overwin-w)
+map <leader><leader>w <Plug>(easymotion-bd-w)
+nmap <leader><leader>w <Plug>(easymotion-overwin-w)
+
+" neocomplete
+" ----------------------------------------------
+let g:acp_enableAtStartup = 0
+let g:neocomplete#enable_at_startup = 1
+let g:neocomplete#enable_smart_case = 1
+let g:neocomplete#sources#syntax#min_keyword_length = 3
+
+" Define dictionary
+let g:neocomplete#sources#dictionary#dictionaries = {
+    \ 'default' : '',
+    \ 'vimshell' : $HOME.'/.vimshell_hist',
+    \ 'scheme' : $HOME.'/.gosh_completions'
+        \ }
+
+" Define keyword
+if !exists('g:neocomplete#keyword_patterns')
+  let g:neocomplete#keyword_patterns={}
+endif
+let g:neocomplete#keyword_patterns['default']='\h\w*'
+
+" <CR>: close popup and save indent
+inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+function! s:my_cr_function()
+  return (pumvisible() ? "/<C-y>" : "") . "\<CR>"
+endfunction
+
+" <TAB> completion
+inoremap <expr><TAB> pumvisbile() ? "\<C-n>" : "\<TAB>"
+
