@@ -7,6 +7,7 @@ execute pathogen#infect()
 
 " Style setup
 set nowrap
+set encoding=utf8
 syntax on
 filetype plugin indent on
 colorscheme badwolf 
@@ -23,6 +24,13 @@ set wildignore+=*~,*.swp,*.tmp
 " Line numbering
 set ruler
 set number
+
+" Break long lines by word, not char/<C-y>
+set linebreak
+
+" Make j & k linewise
+map j gj
+map k gk
 
 " Crosshairs
 hi CursorLine cterm=NONE ctermbg=235
@@ -51,7 +59,16 @@ nnoremap <silent> <leader>h :nohlsearch<Bar>:echo<CR>
 " Re-open Previously Opened File
 nnoremap <Leader>b :e#<CR>
 
-" CSS Auto Complete
+" Remap arrow keys to resize splits
+let g:elite_mode=1
+if get(g:, 'elite_mode')
+  nnoremap <Up>    :resize +2<CR>
+  nnoremap <Down>  :resize -2<CR>
+  nnoremap <Left>  :vertical resize +2<CR>
+  nnoremap <Right> :vertical resize -2<CR>
+endif 
+
+" Omni Completion
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
 autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
 autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
@@ -66,21 +83,21 @@ endif
 " PLUG-IN LIST 
 """""""""""""""""""""""""""""""""""""""""""""""""
 
-"  ctrlp.vim
-"  delimitMate
-"  easymotion
-"  gitgutter
-"  indentLine
-"  lightline
-"  nerdcommenter
-"  nerdtree
-"  nerdtree-git-plugin
-"  supertab
-"  vim-csharp
-"  vim-elixir
-"  vim-javascript
-"  vim-multiple-cursors
+"  kien/ctrlp.vim
+"  Raimondi/delimitMate
+"  easymotion/vim-easymotion
+"  airblade/vim-gitgutter
+"  Yggdroot/indentLine
+"  itchyny/lightline.vim
+"  scrooloose/nerdcommenter
+"  scrooloose/nerdtree
+"  Xuyanp/nerdtree-git-plugin
+"  ervandew/supertab
+"  OrangeT/vim-csharp
+"  elixir-editors/vim-elixir
+"  pangloss/vim-javascript
 "  Shougo/neocomplete.vim
+"  w0rp/ale
 
 " PLUG-IN SETTINGS
 """"""""""""""""""""""""""""""""""""""""""""""""
@@ -111,10 +128,65 @@ let g:ctrlp_map='<c-p>'
 let g:ctrlp_cmd='CtrlP'
 let g:ctrlp_show_hidden=1
 
+" ALE
+" ----------------------------------------------
+let g:ale_sign_warning = '▲'
+let g:ale_sign_error = '✗'
+highlight link ALEWarningSign String
+highlight link ALEErrorSign Title
+
 " Lightline
 " ----------------------------------------------
 set laststatus=2
 set noshowmode
+
+" Add Ale support
+let g:lightline = {
+\ 'colorscheme': 'wombat',
+\ 'active': {
+\   'left': [['mode', 'paste'], ['filename', 'modified']],
+\   'right': [['lineinfo'], ['percent'], ['readonly', 'linter_warnings', 'linter_errors', 'linter_ok']]
+\ },
+\ 'component_expand': {
+\   'linter_warnings': 'LightlineLinterWarnings',
+\   'linter_errors': 'LightlineLinterErrors',
+\   'linter_ok': 'LightlineLinterOK'
+\ },
+\ 'component_type': {
+\   'readonly': 'error',
+\   'linter_warnings': 'warning',
+\   'linter_errors': 'error'
+\ },
+\ }
+
+function! LightlineLinterWarnings() abort
+  let l:counts = ale#statusline#Count(bufnr(''))
+  let l:all_errors = l:counts.error + l:counts.style_error
+  let l:all_non_errors = l:counts.total - l:all_errors
+  return l:counts.total == 0 ? '' : printf('%d ▲', all_non_errors)
+endfunction
+
+function! LightlineLinterErrors() abort
+  let l:counts = ale#statusline#Count(bufnr(''))
+  let l:all_errors = l:counts.error + l:counts.style_error
+  let l:all_non_errors = l:counts.total - l:all_errors
+  return l:counts.total == 0 ? '' : printf('%d ✗', all_errors)
+endfunction
+
+function! LightlineLinterOK() abort
+  let l:counts = ale#statusline#Count(bufnr(''))
+  let l:all_errors = l:counts.error + l:counts.style_error
+  let l:all_non_errors = l:counts.total - l:all_errors
+  return l:counts.total == 0 ? ' ' : ''
+endfunction
+
+autocmd User ALELint call s:MaybeUpdateLightline()
+
+function! s:MaybeUpdateLightline()
+  if exists('#lightline')
+    call lightline#update()
+  end
+endfunction
 
 " Easymotion
 " ----------------------------------------------
@@ -132,6 +204,7 @@ nmap <leader><leader>w <Plug>(easymotion-overwin-w)
 
 " neocomplete
 " ----------------------------------------------
+" must install vim-nox on linux for this to work (sudo apt-get install vim-nox)
 let g:acp_enableAtStartup = 0
 let g:neocomplete#enable_at_startup = 1
 let g:neocomplete#enable_smart_case = 1
@@ -158,4 +231,3 @@ endfunction
 
 " <TAB> completion
 inoremap <expr><TAB> pumvisbile() ? "\<C-n>" : "\<TAB>"
-
