@@ -98,6 +98,7 @@ endif
 "  pangloss/vim-javascript
 "  Shougo/neocomplete.vim
 "  w0rp/ale
+"  OmniSharp/omnisharp-vim
 
 " PLUG-IN SETTINGS
 """"""""""""""""""""""""""""""""""""""""""""""""
@@ -231,3 +232,11 @@ endfunction
 
 " <TAB> completion
 inoremap <expr><TAB> pumvisbile() ? "\<C-n>" : "\<TAB>"
+
+" vim-javascript
+" ---------------------------------------------
+let g:javascript_plugin_flow = 1
+
+" omnisharp-vim
+" --------------------------------------------
+let g:OmniSharp_server_use_mono = 1
